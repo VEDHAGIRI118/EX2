@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FlavorBurst | Neon Food Delivery</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0f0f0f, #1e1e2f);
+      color: #fff;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      padding: 25px 10px;
+      background: #000;
+      color: #00ffc3;
+      box-shadow: 0 0 20px #00ffc3;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .card {
+      flex: 1 1 350px;
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 0 20px rgba(0,255,200,0.1);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    h2 {
+      color: #00ffc3;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ffc3;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .price {
+      color: #ffd86b;
+    }
+
+    button {
+      background: transparent;
+      color: #00ffc3;
+      border: 1px solid #00ffc3;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00ffc3;
+      color: #000;
+      box-shadow: 0 0 12px #00ffc3;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 10px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .total {
+      font-size: 18px;
+      margin-top: 20px;
+      color: #ffd86b;
+      font-weight: bold;
+    }
+
+    .place-order {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: #ffd86b;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      margin-top: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ffd86b;
+      transition: 0.3s;
+    }
+
+    .place-order:hover {
+      background: #ffeabf;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>🔥 FlavorBurst – Neon Food Delivery</header>
+
+<div class="container">
+
+  <!-- Menu -->
+  <div class="card">
+    <h2>🍽️ Menu</h2>
+    <div class="item">
+      <span class="item-name">🍕 Galactic Pizza</span>
+      <span class="price">₹260</span>
+      <button onclick="addToCart('Galactic Pizza', 260)">Add</button>
+    </div>
+    <div class="item">
+      <span class="item-name">🍜 Astro Noodles</span>
+      <span class="price">₹140</span>
+      <button onclick="addToCart('Astro Noodles', 140)">Add</button>
+    </div>
+    <div class="item">
+      <span class="item-name">🥤 Cosmic Cola</span>
+      <span class="price">₹80</span>
+      <button onclick="addToCart('Cosmic Cola', 80)">Add</button>
+    </div>
+    <div class="item">
+      <span class="item-name">🍩 Planet Donut</span>
+      <span class="price">₹100</span>
+      <button onclick="addToCart('Planet Donut', 100)">Add</button>
+    </div>
+  </div>
+
+  <!-- Cart -->
+  <div class="card">
+    <h2>🛒 Your Cart</h2>
+    <div id="cartItems"></div>
+    <div class="total">Total: ₹<span id="total">0</span></div>
+    <button class="place-order" onclick="placeOrder()">🚀 Place Order</button>
+  </div>
+</div>
+
+<script>
+  let cart = [];
+  let total = 0;
+
+  function addToCart(item, price) {
+    cart.push({ item, price });
+    total += price;
+    renderCart();
+  }
+
+  function renderCart() {
+    const cartDiv = document.getElementById("cartItems");
+    cartDiv.innerHTML = "";
+    cart.forEach((c, i) => {
+      cartDiv.innerHTML += `
+        <div class="cart-item">
+          <span>${c.item}</span>
+          <span>₹${c.price} <button onclick="removeItem(${i})">×</button></span>
+        </div>
+      `;
+    });
+    document.getElementById("total").innerText = total;
+  }
+
+  function removeItem(index) {
+    total -= cart[index].price;
+    cart.splice(index, 1);
+    renderCart();
+  }
+
+  function placeOrder() {
+    if (cart.length === 0) {
+      alert("🛒 Cart is empty!");
+      return;
+    }
+    alert("✅ Order placed successfully! 🚀 Your food is launching...");
+    cart = [];
+    total = 0;
+    renderCart();
+  }
+</script>
+
+</body>
+</html>
